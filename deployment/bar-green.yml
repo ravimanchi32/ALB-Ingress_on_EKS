@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-bar-green
+  namespace: default
+  labels:
+    app: server-bar
+    version: green
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: server-bar
+      version: green
+  template:
+    metadata:
+      labels:
+        app: server-bar
+        version: green
+    spec:
+      containers:
+        - name: server-bar-container
+          image: ravikumarmanchi/bar:v1  # Use new version tag
+          ports:
+            - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server-bar
+spec:
+  selector:
+    app: server-bar
+    version: green  # This determines the active version
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
